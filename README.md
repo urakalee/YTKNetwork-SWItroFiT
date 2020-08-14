@@ -5,11 +5,32 @@
 [![License](https://img.shields.io/cocoapods/l/YTKNetwork-SWItroFiT.svg?style=flat)](https://cocoapods.org/pods/YTKNetwork-SWItroFiT)
 [![Platform](https://img.shields.io/cocoapods/p/YTKNetwork-SWItroFiT.svg?style=flat)](https://cocoapods.org/pods/YTKNetwork-SWItroFiT)
 
-## Example
+## Usage
+```
+class DataService {
+    @GET("data/items")
+    private var listApiBuilder: YTKNetworkApiBuilder<ItemList>
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
+    func listApi(startCursor: String = "0", limit: Int = 20, arguments: [String: String]) -> YTKNetworkApi<ItemList> {
+        return listApiBuilder.build(with: #function, startCursor, limit, arguments)
+    }
+
+    @GET("data/items/{itemId}")
+    private var itemApiBuilder: YTKNetworkApiBuilder<Item>
+
+    func itemApi(itemId: Int) -> YTKNetworkApi<Item> {
+        return itemApiBuilder.build(with: #function, itemId)
+    }
+}
+
+let service = DataService()
+let listApi = service.listApi(arguments: ["key1": "value1", "key2": "value2"])
+let itemApi = service.itemApi(itemId: 123456)
+
+```
 
 ## Requirements
+- YTKNetwork 3.0+
 
 ## Installation
 
@@ -22,7 +43,7 @@ pod 'YTKNetwork-SWItroFiT'
 
 ## Author
 
-liqiang, liqiang@fenbi.com
+liqiang, liqiang(at)fenbi.com
 
 ## License
 

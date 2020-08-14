@@ -2,47 +2,21 @@
 
 import Quick
 import Nimble
-import YTKNetwork_SWItroFiT
+@testable import YTKNetwork_SWItroFiT
 
-class TableOfContentsSpec: QuickSpec {
+class PlaygroundSpec: QuickSpec {
     override func spec() {
-        describe("these will fail") {
-            it("can do maths") {
-                expect(1) == 2
-            }
-
-            it("can read") {
-                expect("number") == "string"
-            }
-
-            it("will eventually fail") {
-                expect("time").toEventually(equal("done"))
-            }
-
-            context("these will pass") {
-                it("can do maths") {
-                    expect(23) == 23
-                }
-
-                it("can read") {
-                    expect("🐮") == "🐮"
-                }
-
-                it("will eventually pass") {
-                    var time = "passing"
-
-                    DispatchQueue.main.async {
-                        time = "done"
-                    }
-
-                    waitUntil { done in
-                        Thread.sleep(forTimeInterval: 0.5)
-                        expect(time) == "done"
-
-                        done()
-                    }
-                }
-            }
+        it("split") {
+            var origin = "a:b:".components(separatedBy: ":")
+            expect(origin.count) == 3
+            expect(origin[2]) == ""
+            origin = "".components(separatedBy: ":")
+            expect(origin.count) == 1
+        }
+        it("regular expression") {
+            let result = matches(string: "path/to/argument/{_argument1}", regex: "\\{([0-9a-zA-Z_]+)\\}")
+            expect(result.count) == 1
+            expect(result[0]) == "_argument1"
         }
     }
 }
