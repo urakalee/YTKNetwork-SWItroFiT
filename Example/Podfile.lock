@@ -1,7 +1,17 @@
 PODS:
+  - AFNetworking/NSURLSession (4.0.1):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (4.0.1)
+  - AFNetworking/Security (4.0.1)
+  - AFNetworking/Serialization (4.0.1)
   - Nimble (7.3.4)
   - Quick (1.2.0)
-  - YTKNetwork-SWItroFiT (0.1.0)
+  - YTKNetwork (3.0.0):
+    - AFNetworking/NSURLSession (~> 4.0)
+  - YTKNetwork-SWItroFiT (0.1.0):
+    - YTKNetwork (~> 3.0)
 
 DEPENDENCIES:
   - Nimble (~> 7.0)
@@ -9,19 +19,23 @@ DEPENDENCIES:
   - YTKNetwork-SWItroFiT (from `../`)
 
 SPEC REPOS:
-  trunk:
+  https://github.com/CocoaPods/Specs.git:
+    - AFNetworking
     - Nimble
     - Quick
+    - YTKNetwork
 
 EXTERNAL SOURCES:
   YTKNetwork-SWItroFiT:
     :path: "../"
 
 SPEC CHECKSUMS:
+  AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
-  YTKNetwork-SWItroFiT: c7a05ac5d2746b2b0fb5f258654c854b8aeba027
+  YTKNetwork: 0587ce85fda2e2c591405089cc9aaa61649aa5ed
+  YTKNetwork-SWItroFiT: 59d60079597a37c5db4029f7003efc662b441543
 
-PODFILE CHECKSUM: aa8a21574e4b7cf41d01b6a7bb7a853d5914e765
+PODFILE CHECKSUM: 9877fb0d92497d7f3ac610faa0e744c68628a0c1
 
 COCOAPODS: 1.8.4
