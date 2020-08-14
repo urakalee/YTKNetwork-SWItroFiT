@@ -1,0 +1,27 @@
+PODS:
+  - Nimble (7.3.4)
+  - Quick (1.2.0)
+  - YTKNetwork-SWItroFiT (0.1.0)
+
+DEPENDENCIES:
+  - Nimble (~> 7.0)
+  - Quick (~> 1.2.0)
+  - YTKNetwork-SWItroFiT (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - Nimble
+    - Quick
+
+EXTERNAL SOURCES:
+  YTKNetwork-SWItroFiT:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
+  Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  YTKNetwork-SWItroFiT: c7a05ac5d2746b2b0fb5f258654c854b8aeba027
+
+PODFILE CHECKSUM: aa8a21574e4b7cf41d01b6a7bb7a853d5914e765
+
+COCOAPODS: 1.8.4
