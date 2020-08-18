@@ -1,9 +1,9 @@
 # YTKNetwork-SWItroFiT
+- A Retrofit-like YTKNetwork Wrapper
 
-[![CI Status](https://img.shields.io/travis/liqiang/YTKNetwork-SWItroFiT.svg?style=flat)](https://travis-ci.org/liqiang/YTKNetwork-SWItroFiT)
-[![Version](https://img.shields.io/cocoapods/v/YTKNetwork-SWItroFiT.svg?style=flat)](https://cocoapods.org/pods/YTKNetwork-SWItroFiT)
 [![License](https://img.shields.io/cocoapods/l/YTKNetwork-SWItroFiT.svg?style=flat)](https://cocoapods.org/pods/YTKNetwork-SWItroFiT)
-[![Platform](https://img.shields.io/cocoapods/p/YTKNetwork-SWItroFiT.svg?style=flat)](https://cocoapods.org/pods/YTKNetwork-SWItroFiT)
+[![CI Status](https://img.shields.io/travis/urakalee/YTKNetwork-SWItroFiT.svg?style=flat)](https://travis-ci.org/urakalee/YTKNetwork-SWItroFiT)
+[![Version](https://img.shields.io/cocoapods/v/YTKNetwork-SWItroFiT.svg?style=flat)](https://cocoapods.org/pods/YTKNetwork-SWItroFiT)
 
 ## Usage
 ```
@@ -24,12 +24,15 @@ class DataService {
 }
 
 let service = DataService()
+// request "data/items?startCursor=0&limit=20&key1=value1&key2=value2
 let listApi = service.listApi(arguments: ["key1": "value1", "key2": "value2"])
+// request "data/items/123456
 let itemApi = service.itemApi(itemId: 123456)
 
 ```
 
 ## Requirements
+- Swift 5.0+
 - YTKNetwork 3.0+
 
 ## Installation

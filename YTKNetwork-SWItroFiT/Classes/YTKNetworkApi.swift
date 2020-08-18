@@ -59,46 +59,61 @@ public class YTKNetworkApiBuilder<Model: Codable> {
         return build(with: "ignored()")
     }
 
+    private var emptyApi: YTKNetworkApi<Model> {
+        return YTKNetworkApi<Model>(ApiComponent())
+    }
+
     public func build(with signature: String, _ values: Any?...) -> YTKNetworkApi<Model> {
         guard
             let component = component,
             let _ = component.method, let _ = component.url else {
             assert(false, "method or url is not set")
+            return emptyApi
         }
-        let keys = getKeys(from: signature)
-        return build(with: component, keys: keys, values: values)
+        guard let keys = getKeys(from: signature) else {
+            return emptyApi
+        }
+        guard let result = build(with: component, keys: keys, values: values) else {
+            return emptyApi
+        }
+        return result
     }
 
     /// - returns: nil if no arguments
-    private func getKeys(from signature: String) -> [String] {
+    private func getKeys(from signature: String) -> [String]? {
         guard let leftBracket = signature.firstIndex(of: "(") else {
             assert(false, "invalid signature: \(signature)")
+            return nil
         }
         guard let rightBracket = signature.lastIndex(of: ")") else {
             assert(false, "invalid signature: \(signature)")
+            return nil
         }
         let keyString = signature[signature.index(leftBracket, offsetBy: 1)..<rightBracket]
         let split = String(keyString).components(separatedBy: ":")
-        guard split.count > 1 else {
+        if split.count == 1 {
             return [] // no arguments
         }
         // trim the last blank
         guard split[split.count - 1].count == 0 else {
             assert(false, "invalid signature: \(signature)")
+            return nil
         }
         let result = Array(split[0..<split.count - 1])
 
         for key in result {
             guard key != "_" else {
                 assert(false, "do not use _ in signature: \(signature)")
+                return nil
             }
         }
         return result
     }
 
-    private func build(with component: ApiComponent, keys: [String], values: [Any?]) -> YTKNetworkApi<Model> {
+    private func build(with component: ApiComponent, keys: [String], values: [Any?]) -> YTKNetworkApi<Model>? {
         guard keys.count == values.count else {
             assert(false, "key-values not match: \(keys) <=> \(values)")
+            return nil
         }
         let url = component.url!
         let pattern = "\\{([0-9a-zA-Z_]+)\\}"
@@ -110,9 +125,11 @@ public class YTKNetworkApiBuilder<Model: Codable> {
             keyInPathSet.insert(key)
             guard let index = keys.firstIndex(of: key) else {
                 assert(false, "\(key) of \(url) not found in signature keys: \(keys)")
+                return nil
             }
             guard let value = values[index] else {
                 assert(false, "value of \(key) in \(url) is nil: \(keys) <=> \(values)")
+                return nil
             }
             let mirrorDisplayStyle = Mirror(reflecting: value).displayStyle
             guard !(
@@ -121,6 +138,7 @@ public class YTKNetworkApiBuilder<Model: Codable> {
                     || mirrorDisplayStyle == .dictionary
             ) else {
                 assert(false, "value of \(key) should be primitive type: \(value)")
+                return nil
             }
             resultUrl = resultUrl.replacingOccurrences(of: "{\(key)}", with: "\(value)")
         }
@@ -141,6 +159,7 @@ public class YTKNetworkApiBuilder<Model: Codable> {
             if key == "arguments" {
                 guard let args = value as? [String: Any?] else {
                     assert(false, "value of arguments should be [String:Any?]: \(value)")
+                    return nil
                 }
                 // filter nil value in arguments
                 for (k, v) in args {
@@ -149,12 +168,14 @@ public class YTKNetworkApiBuilder<Model: Codable> {
                     }
                     guard arguments[k] == nil else {
                         assert(false, "found duplicated \(k) in arguments")
+                        return nil
                     }
                     arguments[k] = "\(v)"
                 }
             } else {
                 guard arguments[key] == nil else {
                     assert(false, "found duplicated \(key) in signature")
+                    return nil
                 }
                 arguments[key] = "\(value)"
             }

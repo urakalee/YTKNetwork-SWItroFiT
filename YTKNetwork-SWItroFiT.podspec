@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'YTKNetwork-SWItroFiT'
   s.version          = '0.1.0'
-  s.summary          = 'A short description of YTKNetwork-SWItroFiT.'
+  s.summary          = 'A Retrofit-like YTKNetwork Wrapper'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -21,14 +21,15 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/liqiang/YTKNetwork-SWItroFiT'
+  s.homepage         = 'https://github.com/urakalee/YTKNetwork-SWItroFiT'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { 'liqiang' => 'liqiang@fenbi.com' }
-  s.source           = { :git => 'https://github.com/liqiang/YTKNetwork-SWItroFiT.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/urakalee/YTKNetwork-SWItroFiT.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '8.0'
+  s.swift_version = "5.0"
+  s.ios.deployment_target = '9.0'
 
   s.source_files = 'YTKNetwork-SWItroFiT/Classes/**/*'
 
