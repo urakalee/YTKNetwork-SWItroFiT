@@ -45,6 +45,12 @@ pod 'YTKNetwork-SWItroFiT'
 
 liqiang, liqiang(at)fenbi.com
 
+## Todo
+- [] POST
+- [] PUT
+- [] DELETE
+- [] Easy mock for unit test
+
 ## License
 
 YTKNetwork-SWItroFiT is available under the MIT license. See the LICENSE file for more info.
