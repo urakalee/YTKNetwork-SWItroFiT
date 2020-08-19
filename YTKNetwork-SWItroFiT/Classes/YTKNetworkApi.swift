@@ -11,6 +11,7 @@ import YTKNetwork
 class ApiComponent: WithScope {
     var method: YTKRequestMethod!
     var url: String!
+    var contentType: YTKRequestSerializerType = .HTTP
     var arguments: [String: String]?
 }
 
@@ -27,6 +28,10 @@ public class YTKNetworkApi<Model: Codable>: YTKRequest {
 
     override public func requestUrl() -> String {
         return component.url
+    }
+
+    override public func requestSerializerType() -> YTKRequestSerializerType {
+        return component.contentType
     }
 
     override public func requestArgument() -> Any? {
@@ -55,12 +60,23 @@ public class YTKNetworkApiBuilder<Model: Codable> {
         return self
     }
 
+    func contentType(_ contentType: YTKRequestSerializerType) -> YTKNetworkApiBuilder<Model> {
+        component = (component ?? ApiComponent()).also {
+            $0.contentType = contentType
+        }
+        return self
+    }
+
     public func build() -> YTKNetworkApi<Model> {
         return build(with: "ignored()")
     }
 
     private var emptyApi: YTKNetworkApi<Model> {
         return YTKNetworkApi<Model>(ApiComponent())
+    }
+
+    private func reset() {
+        component = nil
     }
 
     public func build(with signature: String, _ values: Any?...) -> YTKNetworkApi<Model> {
@@ -76,6 +92,7 @@ public class YTKNetworkApiBuilder<Model: Codable> {
         guard let result = build(with: component, keys: keys, values: values) else {
             return emptyApi
         }
+        reset() // no need to reset when return emptyApi since it's not valid build
         return result
     }
 
@@ -116,35 +133,65 @@ public class YTKNetworkApiBuilder<Model: Codable> {
             return nil
         }
         let url = component.url!
-        let pattern = "\\{([0-9a-zA-Z_]+)\\}"
-        let keysInPath = matches(string: url, regex: pattern)
         // path
-        var resultUrl = url
+        var resultUrl = ""
         var keyInPathSet = Set<String>()
-        for key in keysInPath {
-            keyInPathSet.insert(key)
-            guard let index = keys.firstIndex(of: key) else {
-                assert(false, "\(key) of \(url) not found in signature keys: \(keys)")
-                return nil
+        let pathItems = url.components(separatedBy: "/")
+        for (index, item) in pathItems.enumerated() {
+            if index > 0 {
+                resultUrl.append("/")
             }
-            guard let value = values[index] else {
-                assert(false, "value of \(key) in \(url) is nil: \(keys) <=> \(values)")
-                return nil
+            if let leftBrace = item.lastIndex(of: "{") {
+                // argument in path
+                guard leftBrace == item.startIndex else {
+                    assert(false, "invalid \(item).leftBrace in path: \(url)")
+                    return nil
+                }
+                guard let rightBrace = item.firstIndex(of: "}") else {
+                    assert(false, "invalid \(item).noRightBrace in path: \(url)")
+                    return nil
+                }
+                guard rightBrace == item.index(item.endIndex, offsetBy: -1) else {
+                    assert(false, "invalid \(item).rightBrace in path: \(url)")
+                    return nil
+                }
+                let key = String(item[item.index(leftBrace, offsetBy: 1)..<rightBrace])
+                keyInPathSet.insert(key)
+                guard let index = keys.firstIndex(of: key) else {
+                    assert(false, "\(key) of \(url) not found in signature keys: \(keys)")
+                    return nil
+                }
+                guard let value = values[index] else {
+                    assert(false, "value of \(key) in \(url) is nil: \(keys) <=> \(values)")
+                    return nil
+                }
+                let mirrorDisplayStyle = Mirror(reflecting: value).displayStyle
+                guard !(
+                    mirrorDisplayStyle == .struct
+                        || mirrorDisplayStyle == .class
+                        || mirrorDisplayStyle == .dictionary
+                ) else {
+                    assert(false, "value of \(key) should be primitive type: \(value)")
+                    return nil
+                }
+                resultUrl.append("\(value)")
+            } else {
+                guard item.firstIndex(of: "}") == nil else {
+                    assert(false, "invalid \(item).noLeftBrace in path: \(url)")
+                    return nil
+                }
+                let match = matches(string: item, regex: "^[0-9a-zA-Z]*$")
+                guard match.count == 1, match[0] == item else {
+                    assert(false, "invalid '\(item)' in path: '\(url)'")
+                    return nil
+                }
+                resultUrl.append(item)
             }
-            let mirrorDisplayStyle = Mirror(reflecting: value).displayStyle
-            guard !(
-                mirrorDisplayStyle == .struct
-                    || mirrorDisplayStyle == .class
-                    || mirrorDisplayStyle == .dictionary
-            ) else {
-                assert(false, "value of \(key) should be primitive type: \(value)")
-                return nil
-            }
-            resultUrl = resultUrl.replacingOccurrences(of: "{\(key)}", with: "\(value)")
         }
         let resultComponent = ApiComponent()
         resultComponent.method = component.method
         resultComponent.url = resultUrl
+        resultComponent.contentType = component.contentType
         // query
         var arguments: [String: String] = [String: String]()
         for (index, key) in keys.enumerated() {

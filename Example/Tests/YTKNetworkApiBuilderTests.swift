@@ -41,6 +41,30 @@ class YTKNetworkApiBuilderTest: QuickSpec {
                 }
             }
         }
+        describe("test build path") {
+            it("valid path with no argument") {
+                expect(builder.method(.GET).url("").build().requestUrl()) == ""
+                expect(builder.method(.GET).url("/").build().requestUrl()) == "/"
+                expect(builder.method(.GET).url("url/").build().requestUrl()) == "url/"
+                expect(builder.method(.GET).url("/url").build().requestUrl()) == "/url"
+                expect(builder.method(.GET).url("part1/part2").build().requestUrl()) == "part1/part2"
+                expect(builder.method(.GET).url("part1/part2/").build().requestUrl()) == "part1/part2/"
+                expect(builder.method(.GET).url("/part1/part2").build().requestUrl()) == "/part1/part2"
+                expect(builder.method(.GET).url("/part1/part2/").build().requestUrl()) == "/part1/part2/"
+            }
+            it("invalid path with argument") {
+                expect { builder.method(.GET).url("{{arg}").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("a{rg").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("{arg").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("arg}").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("ar}g").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("{arg}}").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("{arg)").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("(arg}").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("(arg)").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("{_arg}").build() }.to(throwAssertion())
+            }
+        }
         describe("test build path with arguments") {
             beforeEach {
                 builder.method(.GET).url("arg1/{arg1}/arg2/{arg2}")
@@ -82,8 +106,12 @@ class YTKNetworkApiBuilderTest: QuickSpec {
             it("valid arguments") {
                 var api = builder.build(with: "f(arg1:arg2:)", 1, "s1")
                 expect(api.requestUrl()) == "arg1/1/arg2/s1"
-                api = builder.build(with: "f(arg1:arg2:)", 3.1415926, true)
+            }
+            it("multiple build") {
+                var api = builder.build(with: "f(arg1:arg2:)", 3.1415926, true)
                 expect(api.requestUrl()) == "arg1/3.1415926/arg2/true"
+                // each builder can only build 1 time
+                expect { builder.build() }.to(throwAssertion())
             }
         }
         describe("test build query with arguments") {
@@ -137,6 +165,16 @@ class YTKNetworkApiBuilderTest: QuickSpec {
                 let arguments = api.requestArgument() as? [String: String]
                 expect(arguments?.count) == 1
                 expect(arguments?["arg2"]) == "2"
+            }
+        }
+        describe("test build with contentType") {
+            it("default type") {
+                let api = builder.method(.POST).url("url").build()
+                expect(api.requestSerializerType()) == .HTTP
+            }
+            it("json type") {
+                let api = builder.method(.POST).url("url").contentType(.JSON).build()
+                expect(api.requestSerializerType()) == .JSON
             }
         }
     }
