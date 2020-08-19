@@ -8,7 +8,7 @@ PODS:
   - AFNetworking/Serialization (4.0.1)
   - Nimble (7.3.4)
   - Quick (1.3.4)
-  - YTKNetwork (3.0.0):
+  - YTKNetwork (3.0.3):
     - AFNetworking/NSURLSession (~> 4.0)
   - YTKNetwork-SWItroFiT (0.1.0):
     - YTKNetwork (~> 3.0)
@@ -33,8 +33,8 @@ SPEC CHECKSUMS:
   AFNetworking: 7864c38297c79aaca1500c33288e429c3451fdce
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Quick: f4f7f063c524394c73ed93ac70983c609805d481
-  YTKNetwork: 0587ce85fda2e2c591405089cc9aaa61649aa5ed
-  YTKNetwork-SWItroFiT: 5c37d9f45a497ec0dbd0c31af751f44eba5cfd84
+  YTKNetwork: cc6c9799860cfbcd3605a92242ad2ee2a04d6e0c
+  YTKNetwork-SWItroFiT: 74b16c4d280ce1e4d6963a2a8d37749ad543331e
 
 PODFILE CHECKSUM: 4e9816d31ab416e704a9d4d596f797786c517713
 

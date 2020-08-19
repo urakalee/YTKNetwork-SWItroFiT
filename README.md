@@ -6,7 +6,7 @@
 [![Version](https://img.shields.io/cocoapods/v/YTKNetwork-SWItroFiT.svg?style=flat)](https://cocoapods.org/pods/YTKNetwork-SWItroFiT)
 
 ## Usage
-```
+```swift
 class DataService {
     @GET("data/items")
     private var listApiBuilder: YTKNetworkApiBuilder<ItemList>
