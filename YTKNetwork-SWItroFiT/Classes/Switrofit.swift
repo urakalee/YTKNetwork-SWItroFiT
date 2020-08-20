@@ -8,7 +8,7 @@
 import Foundation
 import YTKNetwork
 
-public class RequestMethodWrapper<Model: Codable> {
+public class RequestMethodWrapper<Model> {
     let url: String
 
     public init(_ url: String) {
@@ -17,14 +17,14 @@ public class RequestMethodWrapper<Model: Codable> {
 }
 
 @propertyWrapper
-public class GET<Model: Codable>: RequestMethodWrapper<Model> {
+public class GET<Model>: RequestMethodWrapper<Model> {
     public var wrappedValue: YTKNetworkApiBuilder<Model> {
         return YTKNetworkApiBuilder<Model>().method(.GET).url(url)
     }
 }
 
 @propertyWrapper
-public class POST<Model: Codable>: RequestMethodWrapper<Model> {
+public class POST<Model>: RequestMethodWrapper<Model> {
     private let contentType: YTKRequestSerializerType
 
     public init(_ url: String, contentType: YTKRequestSerializerType = .HTTP) {

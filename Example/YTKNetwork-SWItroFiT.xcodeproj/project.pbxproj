@@ -17,6 +17,8 @@
 		7B2D0292E41D8C2247F700B7 /* Pods_YTKNetwork_SWItroFiT_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E4E7951AAEF872222AE942F /* Pods_YTKNetwork_SWItroFiT_Tests.framework */; };
 		D53F1C6324E69B09002FE264 /* YTKNetoworkApiTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F1C6224E69B09002FE264 /* YTKNetoworkApiTests.swift */; };
 		D53F1C6724E6C015002FE264 /* YTKNetworkApiBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D53F1C6624E6C015002FE264 /* YTKNetworkApiBuilderTests.swift */; };
+		D5A8469D24EEBB8A00786AA7 /* TestsWithOC.m in Sources */ = {isa = PBXBuildFile; fileRef = D5A8469C24EEBB8A00786AA7 /* TestsWithOC.m */; };
+		D5A8469F24EEBB9D00786AA7 /* TestService.swift in Sources */ = {isa = PBXBuildFile; fileRef = D5A8469E24EEBB9D00786AA7 /* TestService.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +51,8 @@
 		C30AFAD752565ABB7EC30EB5 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		D53F1C6224E69B09002FE264 /* YTKNetoworkApiTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTKNetoworkApiTests.swift; sourceTree = "<group>"; };
 		D53F1C6624E6C015002FE264 /* YTKNetworkApiBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YTKNetworkApiBuilderTests.swift; sourceTree = "<group>"; };
+		D5A8469C24EEBB8A00786AA7 /* TestsWithOC.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TestsWithOC.m; sourceTree = "<group>"; };
+		D5A8469E24EEBB9D00786AA7 /* TestService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestService.swift; sourceTree = "<group>"; };
 		DB51D0F0AF6A1149A91CC904 /* Pods-YTKNetwork-SWItroFiT_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-YTKNetwork-SWItroFiT_Example.debug.xcconfig"; path = "Target Support Files/Pods-YTKNetwork-SWItroFiT_Example/Pods-YTKNetwork-SWItroFiT_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		EBC347E7F663708FD1AEE935 /* Pods_YTKNetwork_SWItroFiT_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_YTKNetwork_SWItroFiT_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -132,6 +136,8 @@
 				607FACE91AFB9204008FA782 /* Supporting Files */,
 				D53F1C6224E69B09002FE264 /* YTKNetoworkApiTests.swift */,
 				D53F1C6624E6C015002FE264 /* YTKNetworkApiBuilderTests.swift */,
+				D5A8469C24EEBB8A00786AA7 /* TestsWithOC.m */,
+				D5A8469E24EEBB9D00786AA7 /* TestService.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -320,11 +326,13 @@
 			);
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-YTKNetwork-SWItroFiT_Tests/Pods-YTKNetwork-SWItroFiT_Tests-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/Mantle/Mantle.framework",
 				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
 				"${BUILT_PRODUCTS_DIR}/Quick/Quick.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mantle.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Quick.framework",
 			);
@@ -372,6 +380,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				D53F1C6324E69B09002FE264 /* YTKNetoworkApiTests.swift in Sources */,
+				D5A8469D24EEBB8A00786AA7 /* TestsWithOC.m in Sources */,
+				D5A8469F24EEBB9D00786AA7 /* TestService.swift in Sources */,
 				D53F1C6724E6C015002FE264 /* YTKNetworkApiBuilderTests.swift in Sources */,
 				607FACEC1AFB9204008FA782 /* Tests.swift in Sources */,
 			);
@@ -542,6 +552,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 33A8E7BA2787CC8A25703063 /* Pods-YTKNetwork-SWItroFiT_Tests.debug.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -554,6 +565,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/YTKNetwork-SWItroFiT_Example.app/YTKNetwork-SWItroFiT_Example";
@@ -564,6 +576,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 5E35EF1D7893234414E23D20 /* Pods-YTKNetwork-SWItroFiT_Tests.release.xcconfig */;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
 					"$(inherited)",

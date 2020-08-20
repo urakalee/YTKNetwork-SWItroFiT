@@ -56,11 +56,11 @@ liqiang, uraka.lee(at)gmail.com
 ## Todo
 - [x] POST
 - [x] Support {device} in path
-- [] Check #function in release build
-- [] Check using in OC
-- [] PUT
-- [] DELETE
-- [] Easy mock for unit test
+- [x] Check #function in release build
+- [x] Check using in OC
+- [ ] PUT
+- [ ] DELETE
+- [ ] Easy mock for unit test
 
 ## License
 

@@ -15,7 +15,8 @@ class ApiComponent: WithScope {
     var arguments: [String: String]?
 }
 
-public class YTKNetworkApi<Model: Codable>: YTKRequest {
+public class YTKNetworkApi<Model>: YTKRequest, IResult {
+    public typealias Result = Model
     private let component: ApiComponent
 
     fileprivate init(_ component: ApiComponent) {
@@ -37,13 +38,9 @@ public class YTKNetworkApi<Model: Codable>: YTKRequest {
     override public func requestArgument() -> Any? {
         return component.arguments
     }
-
-    public func result() -> Model? {
-        return responseDecodable()
-    }
 }
 
-public class YTKNetworkApiBuilder<Model: Codable> {
+public class YTKNetworkApiBuilder<Model> {
     private var component: ApiComponent?
 
     func method(_ method: YTKRequestMethod) -> YTKNetworkApiBuilder<Model> {

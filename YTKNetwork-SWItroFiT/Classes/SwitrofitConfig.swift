@@ -4,13 +4,14 @@
 
 import Foundation
 
-public class SwitrofitConfig {
-    public static let instance = SwitrofitConfig()
+@objc
+public class SwitrofitConfig: NSObject {
+    @objc public static let instance = SwitrofitConfig()
     private(set) var ignoredPathArgument = [String]()
 
-    private init() {}
+    override private init() {}
 
-    public func setIgnoredPathArguments(keys: [String]) {
+    @objc public func setIgnoredPathArguments(keys: [String]) {
         ignoredPathArgument = keys
     }
 }

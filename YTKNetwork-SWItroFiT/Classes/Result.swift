@@ -7,4 +7,8 @@
 
 import Foundation
 
+public protocol IResult {
+    associatedtype Result
+}
+
 public struct EmptyResult: Codable {}

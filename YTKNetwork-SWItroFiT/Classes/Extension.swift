@@ -8,19 +8,21 @@
 import Foundation
 import YTKNetwork
 
-public extension YTKRequest {
-    func responseDecodable<Model: Decodable>() -> Model? {
-        return responseDecodable(with: self.responseData)
+public extension YTKNetworkApi {
+    func asRequest() -> YTKRequest {
+        return self as YTKRequest
     }
+}
 
-    func responseDecodable<Model: Decodable>(with data: Data?) -> Model? {
-        guard let data = data else { return nil }
+public extension YTKNetworkApi where Result: Codable {
+    func result() -> Result? {
+        guard let data = self.responseData else { return nil }
         let decoder = JSONDecoder()
         decoder.dateDecodingStrategy = .millisecondsSince1970
         do {
-            return try decoder.decode(Model.self, from: data)
+            return try decoder.decode(Result.self, from: data)
         } catch {
-            debugPrint("\(self), \(Model.self), Decode Error: \(error)")
+            debugPrint("\(self), \(Result.self), Decode Error: \(error)")
             assert(false)
             return nil
         }
