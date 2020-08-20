@@ -132,8 +132,23 @@ public class YTKNetworkApiBuilder<Model: Codable> {
             assert(false, "key-values not match: \(keys) <=> \(values)")
             return nil
         }
-        let url = component.url!
-        // path
+        guard let (resultUrl, keyInPathSet) = buildPath(with: component.url, keys: keys, values: values) else {
+            return nil
+        }
+        let resultComponent = ApiComponent()
+        resultComponent.method = component.method
+        resultComponent.url = resultUrl
+        resultComponent.contentType = component.contentType
+        guard let arguments = buildArguments(with: keyInPathSet, keys: keys, values: values) else {
+            return nil
+        }
+        resultComponent.arguments = arguments
+        // body
+        // TODO:
+        return YTKNetworkApi<Model>(resultComponent)
+    }
+
+    private func buildPath(with url: String, keys: [String], values: [Any?]) -> (String, Set<String>)? {
         var resultUrl = ""
         var keyInPathSet = Set<String>()
         let pathItems = url.components(separatedBy: "/")
@@ -156,7 +171,15 @@ public class YTKNetworkApiBuilder<Model: Codable> {
                     return nil
                 }
                 let key = String(item[item.index(leftBrace, offsetBy: 1)..<rightBrace])
-                keyInPathSet.insert(key)
+                let match = matches(string: key, regex: "^[^\\s]*$")
+                guard match.count == 1, match[0] == key else {
+                    assert(false, "invalid '\(item)' in path: '\(url)'")
+                    return nil
+                }
+                if SwitrofitConfig.instance.ignoredPathArgument.contains(key) {
+                    resultUrl.append(item)
+                    continue
+                }
                 guard let index = keys.firstIndex(of: key) else {
                     assert(false, "\(key) of \(url) not found in signature keys: \(keys)")
                     return nil
@@ -174,13 +197,14 @@ public class YTKNetworkApiBuilder<Model: Codable> {
                     assert(false, "value of \(key) should be primitive type: \(value)")
                     return nil
                 }
+                keyInPathSet.insert(key)
                 resultUrl.append("\(value)")
             } else {
                 guard item.firstIndex(of: "}") == nil else {
                     assert(false, "invalid \(item).noLeftBrace in path: \(url)")
                     return nil
                 }
-                let match = matches(string: item, regex: "^[0-9a-zA-Z]*$")
+                let match = matches(string: item, regex: "^[^\\s]*$")
                 guard match.count == 1, match[0] == item else {
                     assert(false, "invalid '\(item)' in path: '\(url)'")
                     return nil
@@ -188,14 +212,14 @@ public class YTKNetworkApiBuilder<Model: Codable> {
                 resultUrl.append(item)
             }
         }
-        let resultComponent = ApiComponent()
-        resultComponent.method = component.method
-        resultComponent.url = resultUrl
-        resultComponent.contentType = component.contentType
-        // query
+        return (resultUrl, keyInPathSet)
+    }
+
+    private func buildArguments(with keyInPathSet: Set<String>, keys: [String], values: [Any?]) -> [String: String]? {
         var arguments: [String: String] = [String: String]()
         for (index, key) in keys.enumerated() {
             // pass keys in path
+            // NOTE: do not support path & query with a same key
             if keyInPathSet.contains(key) {
                 continue
             }
@@ -227,9 +251,6 @@ public class YTKNetworkApiBuilder<Model: Codable> {
                 arguments[key] = "\(value)"
             }
         }
-        resultComponent.arguments = arguments
-        // body
-        // TODO:
-        return YTKNetworkApi<Model>(resultComponent)
+        return arguments
     }
 }

@@ -51,6 +51,11 @@ class YTKNetworkApiBuilderTest: QuickSpec {
                 expect(builder.method(.GET).url("part1/part2/").build().requestUrl()) == "part1/part2/"
                 expect(builder.method(.GET).url("/part1/part2").build().requestUrl()) == "/part1/part2"
                 expect(builder.method(.GET).url("/part1/part2/").build().requestUrl()) == "/part1/part2/"
+                expect(builder.method(.GET).url("(arg)").build().requestUrl()) == "(arg)"
+                expect(builder.method(.GET).url("_arg").build().requestUrl()) == "_arg"
+            }
+            it("invalid path with no argument") {
+                expect { builder.method(.GET).url("path/with/no/a rg/").build() }.to(throwAssertion())
             }
             it("invalid path with argument") {
                 expect { builder.method(.GET).url("{{arg}").build() }.to(throwAssertion())
@@ -61,8 +66,15 @@ class YTKNetworkApiBuilderTest: QuickSpec {
                 expect { builder.method(.GET).url("{arg}}").build() }.to(throwAssertion())
                 expect { builder.method(.GET).url("{arg)").build() }.to(throwAssertion())
                 expect { builder.method(.GET).url("(arg}").build() }.to(throwAssertion())
-                expect { builder.method(.GET).url("(arg)").build() }.to(throwAssertion())
-                expect { builder.method(.GET).url("{_arg}").build() }.to(throwAssertion())
+                expect { builder.method(.GET).url("path/with/{a rg}/").build() }.to(throwAssertion())
+            }
+            it("with ignored arguments") {
+                SwitrofitConfig.instance.setIgnoredPathArguments(keys: ["device", "ignored"])
+                expect(builder.method(.GET).url("{device}").build().requestUrl()) == "{device}"
+                expect(builder.method(.GET).url("part1/{device}/part2").build().requestUrl()) == "part1/{device}/part2"
+                expect(builder.method(.GET).url("{device}/{arg}").build(with: "f(arg:)", 1).requestUrl()) ==
+                    "{device}/1"
+                expect(builder.method(.GET).url("{device}/{ignored}").build().requestUrl()) == "{device}/{ignored}"
             }
         }
         describe("test build path with arguments") {

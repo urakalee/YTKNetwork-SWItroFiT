@@ -12,6 +12,9 @@ import Nimble
 
 class YTKNetworkApiTests: QuickSpec {
     override func spec() {
+        beforeEach {
+            SwitrofitConfig.instance.setIgnoredPathArguments(keys: [])
+        }
         describe("Test GET") {
             context("no argument") {
                 class NoArgumentService {
@@ -27,6 +30,22 @@ class YTKNetworkApiTests: QuickSpec {
                 it("get with no argument") {
                     expect(api.requestMethod()) == .GET
                     expect(api.requestUrl()) == "path/with/no/argument"
+                }
+            }
+            context("with ignored argument") {
+                class WithIgnoredArgumentService {
+                    @GET("micro-service/{device}/path")
+                    private var apiBuilder: YTKNetworkApiBuilder<EmptyResult>
+
+                    func api() -> YTKNetworkApi<EmptyResult> {
+                        return apiBuilder.build()
+                    }
+                }
+
+                SwitrofitConfig.instance.setIgnoredPathArguments(keys: ["device"])
+                let api = WithIgnoredArgumentService().api()
+                it("{argument} in result path") {
+                    expect(api.requestUrl()) == "micro-service/{device}/path"
                 }
             }
             context("argument in path") {
