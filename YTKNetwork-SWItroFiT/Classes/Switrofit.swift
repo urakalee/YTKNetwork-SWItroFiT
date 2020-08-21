@@ -24,6 +24,13 @@ public class GET<Model>: RequestMethodWrapper<Model> {
 }
 
 @propertyWrapper
+public class HEAD<Model>: RequestMethodWrapper<Model> {
+    public var wrappedValue: YTKNetworkApiBuilder<Model> {
+        return YTKNetworkApiBuilder<Model>().method(.HEAD).url(url)
+    }
+}
+
+@propertyWrapper
 public class POST<Model>: RequestMethodWrapper<Model> {
     private let contentType: YTKRequestSerializerType
 
@@ -34,5 +41,26 @@ public class POST<Model>: RequestMethodWrapper<Model> {
 
     public var wrappedValue: YTKNetworkApiBuilder<Model> {
         return YTKNetworkApiBuilder<Model>().method(.POST).url(url).contentType(contentType)
+    }
+}
+
+@propertyWrapper
+public class PUT<Model>: RequestMethodWrapper<Model> {
+    private let contentType: YTKRequestSerializerType
+
+    public init(_ url: String, contentType: YTKRequestSerializerType = .HTTP) {
+        self.contentType = contentType
+        super.init(url)
+    }
+
+    public var wrappedValue: YTKNetworkApiBuilder<Model> {
+        return YTKNetworkApiBuilder<Model>().method(.PUT).url(url).contentType(contentType)
+    }
+}
+
+@propertyWrapper
+public class DELETE<Model>: RequestMethodWrapper<Model> {
+    public var wrappedValue: YTKNetworkApiBuilder<Model> {
+        return YTKNetworkApiBuilder<Model>().method(.DELETE).url(url)
     }
 }

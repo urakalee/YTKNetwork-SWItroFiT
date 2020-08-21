@@ -34,7 +34,7 @@ let itemApi = service.itemApi(itemId: 123456)
 - Build function's parameters should consist in api function's, quantity and order
 - DON'T use _ to omit api function's parameter name
 - 'arguments' is reserved for batch adding queries, which type should be [String: Any?], and nil value will be ignored
-- Use SwitrofitConfig.instance.setIgnoredPathArguments to keep {argument} in path
+- Use `SwitrofitConfig.instance.setIgnoredPathArguments` to keep {argument} in path
 
 ## Requirements
 - Swift 5.1+
@@ -58,8 +58,8 @@ liqiang, uraka.lee(at)gmail.com
 - [x] Support {device} in path
 - [x] Check #function in release build
 - [x] Check using in OC
-- [ ] PUT
-- [ ] DELETE
+- [x] PUT
+- [x] HEAD/DELETE
 - [ ] Easy mock for unit test
 
 ## License

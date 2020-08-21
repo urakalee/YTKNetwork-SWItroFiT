@@ -131,6 +131,29 @@ class YTKNetworkApiTests: QuickSpec {
                 }
             }
         }
+        describe("Test HEAD") {
+            class ArgumentService {
+                @HEAD("path/with/arg1/{arg1}")
+                private var apiBuilder: YTKNetworkApiBuilder<EmptyResult>
+
+                func api(arg1: Int, arg2: String, arguments: [String: Any?]) -> YTKNetworkApi<EmptyResult> {
+                    return apiBuilder.build(with: #function, arg1, arg2, arguments)
+                }
+            }
+
+            it("valid arguments") {
+                let args: [String: Any?] = ["key1": 1, "key2": "s2"]
+                let api = ArgumentService().api(arg1: 666, arg2: "xyz", arguments: args)
+                expect(api.requestMethod()) == .HEAD
+                expect(api.requestUrl()) == "path/with/arg1/666"
+                expect(api.requestSerializerType()) == .HTTP
+                let arguments = api.requestArgument() as? [String: String]
+                expect(arguments?.count) == 3
+                expect(arguments?["arg2"]) == "xyz"
+                expect(arguments?["key1"]) == "1"
+                expect(arguments?["key2"]) == "s2"
+            }
+        }
         describe("Test POST") {
             context("default type") {
                 class ArgumentService {
@@ -145,6 +168,7 @@ class YTKNetworkApiTests: QuickSpec {
                 it("valid arguments") {
                     let args: [String: Any?] = ["key1": 1, "key2": "s2"]
                     let api = ArgumentService().api(arg1: 666, arg2: "xyz", arguments: args)
+                    expect(api.requestMethod()) == .POST
                     expect(api.requestUrl()) == "path/with/arg1/666"
                     expect(api.requestSerializerType()) == .HTTP
                     let arguments = api.requestArgument() as? [String: String]
@@ -177,7 +201,51 @@ class YTKNetworkApiTests: QuickSpec {
                 }
             }
         }
-        describe("Test PUT") {}
-        describe("Test DELETE") {}
+        describe("Test PUT") {
+            class ArgumentService {
+                @PUT("path/with/arg1/{arg1}", contentType: .JSON)
+                private var apiBuilder: YTKNetworkApiBuilder<EmptyResult>
+
+                func api(arg1: Int, arg2: String, arguments: [String: Any?]) -> YTKNetworkApi<EmptyResult> {
+                    return apiBuilder.build(with: #function, arg1, arg2, arguments)
+                }
+            }
+
+            it("valid arguments") {
+                let args: [String: Any?] = ["key1": 1, "key2": "s2"]
+                let api = ArgumentService().api(arg1: 666, arg2: "xyz", arguments: args)
+                expect(api.requestMethod()) == .PUT
+                expect(api.requestUrl()) == "path/with/arg1/666"
+                expect(api.requestSerializerType()) == .JSON
+                let arguments = api.requestArgument() as? [String: String]
+                expect(arguments?.count) == 3
+                expect(arguments?["arg2"]) == "xyz"
+                expect(arguments?["key1"]) == "1"
+                expect(arguments?["key2"]) == "s2"
+            }
+        }
+        describe("Test DELETE") {
+            class ArgumentService {
+                @DELETE("path/with/arg1/{arg1}")
+                private var apiBuilder: YTKNetworkApiBuilder<EmptyResult>
+
+                func api(arg1: Int, arg2: String, arguments: [String: Any?]) -> YTKNetworkApi<EmptyResult> {
+                    return apiBuilder.build(with: #function, arg1, arg2, arguments)
+                }
+            }
+
+            it("valid arguments") {
+                let args: [String: Any?] = ["key1": 1, "key2": "s2"]
+                let api = ArgumentService().api(arg1: 666, arg2: "xyz", arguments: args)
+                expect(api.requestMethod()) == .DELETE
+                expect(api.requestUrl()) == "path/with/arg1/666"
+                expect(api.requestSerializerType()) == .HTTP
+                let arguments = api.requestArgument() as? [String: String]
+                expect(arguments?.count) == 3
+                expect(arguments?["arg2"]) == "xyz"
+                expect(arguments?["key1"]) == "1"
+                expect(arguments?["key2"]) == "s2"
+            }
+        }
     }
 }
